@@ -9,11 +9,11 @@ from models import *
 
 # Configure app
 app = Flask(__name__)
-app.secret_key='change later'
-app.config['WTF_CSRF_SECRET_KEY'] = "b'f\xfa\x8b{X\x8b\x9eM\x83l\x19\xad\x84\x08\xaa"
+app.secret_key=os.environ.get('SECRET')
+app.config['WTF_CSRF_SECRET_KEY'] = os.environ('CSRF_SECRET')
 
 # Configure database
-app.config['SQLALCHEMY_DATABASE_URI']='postgres://wcwlejqqgupljr:cd578524384fe50128b92d5def7359e4041ad0cda58189dc53eb4331005d43a5@ec2-3-216-92-193.compute-1.amazonaws.com:5432/d5dlf9grtpdmbk'
+app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -127,5 +127,4 @@ def on_leave(data):
     send({"msg": username + " has left the room"}, room=room)
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    socketio.run(app, debug=True)
+    app.run(debug=True)
